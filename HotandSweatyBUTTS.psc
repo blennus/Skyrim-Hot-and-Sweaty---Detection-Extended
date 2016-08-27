@@ -86,7 +86,7 @@ ObjectReference property HnS_PlayerCellPollerRef auto ;Cell Poller Reference, al
 Actor property PlayerRef auto
 
 float[] property CycleVariableValues auto
-string[] property CycleVariableNames auto
+string[] property CycleFloatVariableNames auto
 ;Following is the list of Variable Names:
 ;"HnS_Vision"
 ;"HnS_BrigthnessMod"
@@ -178,8 +178,8 @@ function InitializeStorage()
 		SetStringValue(ValidKeyWordList[CycleKeyNumber], "HnS_CycleType", KeyWordCycleTypeStringList[CycleKeyNumber])
 		SetIntValue(ValidKeyWordList[CycleKeyNumber], "HnS_KeyWordPriority", KeyWordPriorityIntList[CycleKeyNumber])
 		
-		while CycleVariableNumber < CycleVariableNames.length
-			SetFloatValue(ValidKeyWordList[CycleKeyNumber], CycleVariableNames[CycleVariableNumber], CycleVariableValues[CycleKeyNumber*CycleVariableNames.length + CycleVariableNumber])
+		while CycleVariableNumber < CycleFloatVariableNames.length
+			SetFloatValue(ValidKeyWordList[CycleKeyNumber], CycleFloatVariableNames[CycleVariableNumber], CycleVariableValues[CycleKeyNumber*CycleFloatVariableNames.length + CycleVariableNumber])
 			CycleVariableNumber += 1
 		endWhile
 		

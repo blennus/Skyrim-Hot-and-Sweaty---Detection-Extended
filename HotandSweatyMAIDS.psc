@@ -19,7 +19,7 @@ endEvent
 function HurtYourself()
 	if MasochisticSpellcaster.GetActorValuePercentage("Health") > 0.5
 		MasochisticSpellcaster.DamageAV("Health", MasochisticSpellcaster.GetActorValue("MaxHealth") * ((MasochisticSpellcaster.GetActorValuePercentage("Health") - 0.5)) + 1)
-		Debug.Trace("Heath forcibly lowered to half")
+		Debug.Trace("Health forcibly lowered to half")
 	endIf
 	RegisterForSingleUpdate(0.5)
 endFunction

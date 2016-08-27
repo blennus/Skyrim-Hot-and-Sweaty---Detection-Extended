@@ -29,14 +29,16 @@ endEvent
 function SmellAround()
 	float HowCloseTothePlayersArmpits = 2.0 * (HnS_StinkyDetectionDistance.GetValue() - SmellingActor.GetDistance(PlayerRef)) / HnS_CurrentDetectionDistance_ReadOnly.GetValue()
 	float DetectionLevel = PapyrusUtil.ClampFloat(HowCloseTothePlayersArmpits, 0.0, 4.0)
-	if SmellingActor.GetActorValue("Confidence") > 0.0
-		if SmellingActor.GetCombatState() == 0
-			SmellingActor.CreateDetectionEvent(PlayerRef, 1)
+	if DetectionLevel > 0.0
+		if SmellingActor.GetActorValue("Confidence") > 0.0
+			if SmellingActor.GetCombatState() == 0
+				SmellingActor.CreateDetectionEvent(PlayerRef, 1)
+			endIf
+			HnS_DetectionSuccessTotalThisCycle.Mod(DetectionLevel * HnS_AlertedBonus.GetValue())
+			Debug.Trace(SmellingActor.GetName() + " of Race " + SmellingActor.GetRace().GetName() + " smelled the player for " + DetectionLevel + " points")
+		else
+			SmellingActor.StartCombat(PlayerRef)
 		endIf
-		HnS_DetectionSuccessTotalThisCycle.Mod(DetectionLevel * HnS_AlertedBonus.GetValue())
-		Debug.Trace("Smelled the player for " + DetectionLevel + " points")
-	else
-		SmellingActor.StartCombat(PlayerRef)
 	endIf
 	RegisterForSingleUpdate(HnS_TimeBetweenDetectionChecks.GetValue())
 endFunction

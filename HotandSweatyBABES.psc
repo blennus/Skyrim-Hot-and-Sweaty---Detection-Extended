@@ -185,6 +185,10 @@ function SneakGlobalsUpdate()
 	;Part_Dynamc_Area - Locations where stealth variables change over time but doesn't have weather
 	;Full_Dynamc_Area - Locations where stealth variables change over time and has weather
 	
+	if !AreaCycleKeyWord
+		AreaCycleKeyWord = HnS_LocTypeDefault
+	endIf
+	
 	string CycleState = GetStringValue(AreaCycleKeyWord, "HnS_CycleType")
 	GoToState(CycleState)
 	
