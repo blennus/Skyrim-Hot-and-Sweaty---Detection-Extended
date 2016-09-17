@@ -99,7 +99,8 @@ event OnUpdateSneakGlobals(string eventName, string strArg, float numArg, Form s
 endEvent
 
 function OnLoadInitialize()
-	RegisterForModEvent("HnS_UpdateSneakGlobals", "OnUpdateSneakGlobals")
+	Utility.WaitMenuMode(0.5)
+	SneakGlobalsUpdate()
 endFunction
 
 bool UpdateLock
@@ -126,6 +127,7 @@ function SneakGlobalsUpdate()
 				SetFormValue(CurrentArea, "HnS_CycleKey", AreaCycleKeyWord)
 			elseIf FormListHas(none, "HnS_LargeCityWorldspaces", CurrentArea)
 				AreaCycleKeyWord = LocTypeCity
+				SetFormValue(CurrentArea, "HnS_CycleKey", AreaCycleKeyWord)
 			elseIf HnS_BUTTS.DawnguardLoaded && (CurrentWorldSpace == HnS_BUTTS.DLC01SoulCairn || CurrentWorldSpace == HnS_BUTTS.DLC01Boneyard)
 				AreaCycleKeyWord = HnS_LocTypeSoulCairn
 				SetFormValue(CurrentArea, "HnS_CycleKey", AreaCycleKeyWord)
@@ -515,7 +517,6 @@ endFunction
 
 function instituteSneakVariables()
 	SetGameSettingFloat("fSneakLightMult", VisualGeneralMod)
-	;SetGameSettingFloat("fSneakLightExteriorMult", VisualGeneralMod)
 	SetGameSettingFloat("fDetectionSneakLightMod", VisualBrigthnessMod)
 	SetGameSettingFloat("fSneakLightMoveMult", VisualMovementMod)
 	SetGameSettingFloat("fSneakLightRunMult", VisualRunningMod)

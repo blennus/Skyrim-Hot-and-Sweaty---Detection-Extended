@@ -5,7 +5,7 @@ scriptname HotandSweatySLOOTS extends ActiveMagicEffect
 Actor property PlayerRef auto
 GlobalVariable property HnS_TimeBetweenDetectionChecks auto
 GlobalVariable property HnS_StinkyDetectionDistance auto
-GlobalVariable property HnS_CurrentDetectionDistance_ReadOnly auto
+;GlobalVariable property HnS_CurrentDetectionDistance_ReadOnly auto
 GlobalVariable property HnS_SmellDistanceModifier auto
 GlobalVariable property HnS_AlertedBonus auto
 GlobalVariable property HnS_DetectionSuccessTotalThisCycle auto
@@ -27,7 +27,7 @@ event OnUpdate()
 endEvent
 
 function SmellAround()
-	float HowCloseTothePlayersArmpits = 2.0 * (HnS_StinkyDetectionDistance.GetValue() - SmellingActor.GetDistance(PlayerRef)) / HnS_CurrentDetectionDistance_ReadOnly.GetValue()
+	float HowCloseTothePlayersArmpits = 2.0 * (HnS_StinkyDetectionDistance.GetValue() - SmellingActor.GetDistance(PlayerRef)) / HnS_SmellDistanceModifier.GetValue()
 	float DetectionLevel = PapyrusUtil.ClampFloat(HowCloseTothePlayersArmpits, 0.0, 4.0)
 	if DetectionLevel > 0.0
 		if SmellingActor.GetActorValue("Confidence") > 0.0

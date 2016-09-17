@@ -27,19 +27,21 @@ event OnUpdate()
 endEvent
 
 function SenseMagicka()
-	float MagickaExuded= (PlayerRef.GetActorValue("Magicka") - HnS_HiddenMagickaAmount.GetValue())  / HnS_HiddenMagickaAmount.GetValue()
+	float MagickaExuded= (PlayerRef.GetActorValue("Magicka") - HnS_HiddenMagickaAmount.GetValue()) / HnS_HiddenMagickaAmount.GetValue()
 	if !PlayerRef.HasMagicEffectWithKeyword(HnS_MagicManaCloak)
 		MagickaExuded *= 2.5 * HnS_MagickaReductionPercent.GetValue()
 	endIf
 	float DetectionLevel = PapyrusUtil.ClampFloat(MagickaExuded, 0.0, 4.0)
-	if MagicSensingActor.GetActorValue("Confidence") > 0.0
-		if MagicSensingActor.GetCombatState() == 0
-			MagicSensingActor.CreateDetectionEvent(PlayerRef, 1)
+	if DetectionLevel > 0.0
+		if MagicSensingActor.GetActorValue("Confidence") > 0.0
+			if MagicSensingActor.GetCombatState() == 0 && MagicSensingActor.GetDistance(PlayerRef) < 2500.0
+				MagicSensingActor.CreateDetectionEvent(PlayerRef, 1)
+			endIf
+			HnS_DetectionSuccessTotalThisCycle.Mod(DetectionLevel * HnS_AlertedBonus.GetValue())
+			Debug.Trace(MagicSensingActor.GetName() + " of Race " + MagicSensingActor.GetRace().GetName() + " felt Magicka for " + (DetectionLevel) + " points")
+		else
+			MagicSensingActor.StartCombat(PlayerRef)
 		endIf
-		HnS_DetectionSuccessTotalThisCycle.Mod(DetectionLevel * HnS_AlertedBonus.GetValue())
-		Debug.Trace("Magicka felt for " + (DetectionLevel) + " points")
-	else
-		MagicSensingActor.StartCombat(PlayerRef)
 	endIf
 	RegisterForSingleUpdate(HnS_TimeBetweenDetectionChecks.GetValue())
 endFunction

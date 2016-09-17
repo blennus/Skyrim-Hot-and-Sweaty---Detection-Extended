@@ -8,11 +8,11 @@ import PapyrusUtil
 
 ;=======================Hot and Sweaty Properties============================
 ;HotandSweatyGSTRInG property HnS_GSTRInG auto
-;GlobalVariable property HnS_AllowSmelling auto ;Permit olfactory perception
-;GlobalVariable property HnS_AllowHeatSeeking auto ;Authorize perspicuity of thermal radiation
-;GlobalVariable property HnS_AllowMagickaDetection auto ;License sensing of mystic energies
-;GlobalVariable property HnS_AllowEnvironmentalBlindness auto ;Instigate amaurosis proportional to both decreased photon count and atmospheric density of aerially suspended liquid and crystallized dihydrogen monoxide particulate matter.
-;GlobalVariable property HnS_AllowNightVision auto ;Grant nocturnal optic enhancement
+GlobalVariable property HnS_AllowSmelling auto ;Permit olfactory perception
+GlobalVariable property HnS_AllowHeatSeeking auto ;Authorize perspicuity of thermal radiation
+GlobalVariable property HnS_AllowMagickaDetection auto ;License sensing of mystic energies
+GlobalVariable property HnS_AllowEnvironmentalBlindness auto ;Instigate amaurosis proportional to both decreased photon count and atmospheric density of aerially suspended liquid and crystallized dihydrogen monoxide particulate matter.
+GlobalVariable property HnS_AllowNightVision auto ;Grant nocturnal optic enhancement
 Race property HnS_GhostRace auto
 ;Race property HnS_FreshZombieRace auto
 MagicEffect property HnS_ReAR_Ef auto
@@ -39,14 +39,15 @@ Keyword property ActorTypeNPC auto
 Actor property PlayerRef auto
 
 event OnEffectStart(Actor akTarget, Actor akCaster)
+	;if HnS_AllowEnvironmentalBlindness.GetValue() || HnS_AllowSmelling.GetValue() || HnS_AllowHeatSeeking.GetValue() || HnS_AllowMagickaDetection.GetValue()
 	DetectingActor = akTarget
 	FormListAdd(none, "HnS_DetectingNPCs", DetectingActor, false)
 	WaitMenuMode(0.1)
 	if DetectingActor.HasSpell(GhostResistsAbility) || DetectingActor.IsInFaction(TG09NightingaleEnemyFaction)
-		GotoState("IseeDeadPeople")
+		GotoState("ISeeDeadPeople")
 		DetectingActorRace = HnS_GhostRace
 	;elseIf DetectingActor.HasMagicEffectWithKeyword(MagicSummonUndead)
-	;	GotoState("IseeDeadPeople")
+	;	GotoState("ISeeDeadPeople")
 	;	DetectingActorRace = HnS_FreshZombieRace
 	else
 		DetectingActorRace = DetectingActor.GetRace()
@@ -60,7 +61,10 @@ event OnEffectStart(Actor akTarget, Actor akCaster)
 	RegisterForModEvent("HnS_Ended", "onHnSEnded")
 	Debug.Trace(CurrentNameStringforDebugging + " now has PARTIES.")
 	ApplyForAbilityUpdate()
-	RegisterForSingleUpdateGameTime(24.0) ;this spell will auto expire in approx 1 hour 12 minutes irl, if at vanilla timescale. Just in case.
+	;else
+	;	GotoState("NotDoingAnything")
+	;endIf
+	;RegisterForSingleUpdate(1800.0) ;this spell will auto expire in approx half an hour real time, just in case.
 endEvent
 
 function ApplyForAbilityUpdate()
@@ -83,14 +87,23 @@ function ApplyForAbilityUpdate()
 			return
 		endIf
 	endIf
-	 AddRacialAbilities()
+	AddRacialAbilities()
 endFunction
 
 function determineRacialAbilities()
 	FormListClear(DetectingActorRace, "HnS_RacialAbilities") ;Clear abilities, in case it's a recalculation
+	bool isNPC = DetectingActorRace.HasKeyWord(ActorTypeNPC)
 	bool isUndead = DetectingActorRace.HasKeyWord(ActorTypeUndead)
 	bool isVampire = DetectingActorRace.HasKeyWord(Vampire)
 	bool isDwarvenConstruct = DetectingActorRace.HasKeyWord(ActorTypeDwarven)
+	bool TargetHasHeatVision = (FormListHas(none, "HnS_ThermalVisionRaces", DetectingActorRace) || ((isUndead || isVampire) && !FormListHas(none, "HnS_NoThermalVisionUndeadRaces", DetectingActorRace)))
+	
+	if !FormListHas(none, "HnS_EnviroBlindnessImmuneRaces", DetectingActorRace)
+		bool TargetHasNightVision = FormListHas(none, "HnS_NightVisionRaces", DetectingActorRace)
+		int BlindnessIndex = 2 * (TargetHasHeatVision as int) + (TargetHasNightVision as int)
+		FormListAdd(DetectingActorRace, "HnS_RacialAbilities", ListOfSpellsToApply[BlindnessIndex], false)
+		Debug.Trace(TargetRaceName + " can be blinded at level: " + BlindnessIndex)
+	endIf
 	
 	if !FormListHas(none, "HnS_NoSmellRaces", DetectingActorRace) && (!(isUndead || isDwarvenConstruct) || FormListHas(none, "HnS_SmellyUnLivingRaces", DetectingActorRace))
 		;If Smelling ability is ON, and NOT a Non-smelling race, and isn't an undead or Dwarven Construct OR if it is such a race, it's allowed to smell, then give it a smell ability.
@@ -115,7 +128,6 @@ function determineRacialAbilities()
 		endIf
 	endIf
 	
-	bool TargetHasHeatVision = (FormListHas(none, "HnS_ThermalVisionRaces", DetectingActorRace) || ((isUndead || isVampire) && !FormListHas(none, "HnS_NoThermalVisionUndeadRaces", DetectingActorRace)))
 	if TargetHasHeatVision
 		FormListAdd(DetectingActorRace, "HnS_RacialAbilities", ListOfSpellsToApply[10], false)
 		Debug.Trace(TargetRaceName + " has Heat Vision.")
@@ -126,12 +138,10 @@ function determineRacialAbilities()
 		Debug.Trace(TargetRaceName + " has Magicka Detection.")
 	endIf
 	
-	if !FormListHas(none, "HnS_EnviroBlindnessImmuneRaces", DetectingActorRace)
-		bool TargetHasNightVision = FormListHas(none, "HnS_NightVisionRaces", DetectingActorRace)
-		int BlindnessIndex = 2 * (TargetHasHeatVision as int) + (TargetHasNightVision as int)
-		FormListAdd(DetectingActorRace, "HnS_RacialAbilities", ListOfSpellsToApply[BlindnessIndex], false)
-		Debug.Trace(TargetRaceName + " can be blinded at level: " + BlindnessIndex)
+	if isNPC
+		FormListAdd(DetectingActorRace, "HnS_RacialAbilities", ListOfSpellsToApply[12], false)
 	endIf
+	
 endFunction
 
 function RemoveRacialAbilities()
@@ -151,14 +161,15 @@ function AddRacialAbilities()
 		while SpellAddCounter < CurrentRacialAbilities.Length
 			DetectingActor.AddSpell(CurrentRacialAbilities[SpellAddCounter] as Spell)
 			SpellAddCounter +=1
+			Utility.Wait(0.05)
 		endWhile
 	endIf
 endFunction
 
-event OnUpdateGameTime()
-	Debug.Trace("Spell Expired on: " + CurrentNameStringforDebugging)
-	DetectingActor.RemoveSpell(HnS_PARTIES)
-endEvent
+;event OnUpdate()
+;	Debug.Trace("Spell Expired on: " + CurrentNameStringforDebugging)
+;	DetectingActor.RemoveSpell(HnS_PARTIES)
+;endEvent
 
 event OnCellDetach()
 	Debug.Trace(CurrentNameStringforDebugging + " is Out of Range!")
@@ -193,6 +204,7 @@ endEvent
 
 event OnEffectFinish(Actor akTarget, Actor akCaster)
 	RemoveRacialAbilities()
+	DetectingActor.RemoveSpell(HnS_PARTIES)
 	DetectingActor.RemoveFromFaction(HnS_BlindnessFaction)
 	FormListRemove(none, "HnS_DetectingNPCs", DetectingActor, true)
 	DetectingActor = none
@@ -220,9 +232,27 @@ event onMCMRaceUpdate(string eventName, string strArg, float RemoveOnly, Form se
 	endIf
 endEvent
 
-state IseeDeadPeople
+state ISeeDeadPeople
 	event OnRaceSwitchComplete()
 		
 	endEvent
 	
 endState
+
+;state NotDoingAnything
+;	event OnRaceSwitchComplete()
+;		
+;	endEvent
+;	
+;	event OnMagicEffectApply(ObjectReference akCaster, MagicEffect akEffect)
+;		
+;	endEvent
+;	
+;	event onMCMRaceUpdate(string eventName, string strArg, float RemoveOnly, Form sender)
+;		
+;	endEvent
+;	
+;	event OnEffectFinish(Actor akTarget, Actor akCaster)
+;		akTarget.RemoveSpell(HnS_PARTIES)
+;	endEvent
+;endState

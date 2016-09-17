@@ -51,9 +51,9 @@ event OnUpdate()
 	float CurrentBlindnessLevel = ClampFloat((GetFloatValue(none, "HnS_CurrentBlindnessThreshold") - PlayerCurrentLightLevel)*GetFloatValue(none, "HnS_CurrentLightBlindnessMod"), 0.0, 96.0 - WeatherBlindnessValue * 0.75) + WeatherBlindnessValue  * 0.75
 	float CurrentBlindnessLevelNE = ClampFloat((GetFloatValue(none, "HnS_CurrentBlindnessThresholdNE") - PlayerCurrentLightLevel)*GetFloatValue(none, "HnS_CurrentLightBlindnessModNE"), 0.0, 100.0) + (WeatherBlindnessValue * 1.5)
 	
-	Debug.Trace("Surrounding NPCs Blinded by: " + CurrentBlindnessLevel)
-	Debug.Trace("Surrounding NPCs with Night Eye Blinded by: " + CurrentBlindnessLevelNE)
-	Debug.Trace("Surrounding NPCs with Heat Vision Blinded by: " + ClampFloat(WeatherBlindnessValue * 2.0, 0.0, 100.0))
+	;Debug.Trace("Surrounding NPCs Blinded by: " + CurrentBlindnessLevel)
+	;Debug.Trace("Surrounding NPCs with Night Eye Blinded by: " + CurrentBlindnessLevelNE)
+	;Debug.Trace("Surrounding NPCs with Heat Vision Blinded by: " + ClampFloat(WeatherBlindnessValue * 2.0, 0.0, 100.0))
 	
 	HnS_DINGIS.SetNthEffectMagnitude(0, CurrentBlindnessLevel)
 	HnS_DINGIS.SetNthEffectMagnitude(1, ClampFloat(CurrentBlindnessLevelNE, 0.0, 100.0 - WeatherBlindnessValue * 1.5) + WeatherBlindnessValue * 1.5)

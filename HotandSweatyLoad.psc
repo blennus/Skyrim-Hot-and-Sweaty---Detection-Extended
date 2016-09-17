@@ -78,7 +78,7 @@ event OnUpdate()
 		Utility.Wait(1.0)
 		PlayerRef.RemoveSpell(HnS_TAInT_ApplyingCloakAb)
 	endIf
-	RegisterForSingleUpdate(10.0)
+	RegisterForSingleUpdate(5.0)
 endEvent
 
 event onFrostfallLoaded()
@@ -164,7 +164,6 @@ endState
 
 auto state inActive
 	event OnBeginState() ;When made inactive
-		UnregisterForUpdate()
 		PlayerRef.RemoveSpell(HnS_BUST_Ab)
 		PlayerRef.RemoveSpell(HnS_TAInT_ApplyingCloakAb)
 		UnregisterForUpdate()

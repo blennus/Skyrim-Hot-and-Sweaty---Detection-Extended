@@ -11,15 +11,15 @@ Form[] property NightVisionRaces auto
 Form[] property NoSmellRaces auto
 Form[] property SmellyUnLivingRaces auto
 Form[] property SmellTierNPCRaces auto
-;Form[] property SmellNPCExceptionRaces auto
+Form[] property SmellNPCExceptionRaces auto
 Form[] property SmellTier1Races auto
 Form[] property SmellTier2Races auto
 Form[] property SmellTier3Races auto
 Form[] property SmellTier4Races auto
-;Form[] property ThermalVisionRaces auto
+Form[] property ThermalVisionRaces auto
 Form[] property NoThermalVisionUndeadRaces auto
 Form[] property MagickaDetectionRaces auto
-;Form[] property NoMagickaDetectionDwarvenRaces auto
+Form[] property NoMagickaDetectionDwarvenRaces auto
 Form[] property FoggyWeather auto
 Form[] property SevereWeather auto
 Form[] property LargeCityWorldspaces auto
@@ -153,15 +153,15 @@ function InitializeStorage()
 	FormListCopy(none, "HnS_NoSmellRaces", NoSmellRaces)
 	FormListCopy(none, "HnS_SmellyUnLivingRaces", SmellyUnLivingRaces)
 	FormListCopy(none, "HnS_SmellTierNPCRaces", SmellTierNPCRaces)
-	;FormListCopy(none, "HnS_SmellNPCExceptionRaces", SmellNPCExceptionRaces)
+	FormListCopy(none, "HnS_SmellNPCExceptionRaces", SmellNPCExceptionRaces)
 	FormListCopy(none, "HnS_SmellTier1Races", SmellTier1Races)
 	FormListCopy(none, "HnS_SmellTier2Races", SmellTier2Races)
 	FormListCopy(none, "HnS_SmellTier3Races", SmellTier3Races)
 	FormListCopy(none, "HnS_SmellTier4Races", SmellTier4Races)
-	;FormListCopy(none, "HnS_ThermalVisionRaces", ThermalVisionRaces)
+	FormListCopy(none, "HnS_ThermalVisionRaces", ThermalVisionRaces)
 	FormListCopy(none, "HnS_NoThermalVisionUndeadRaces", NoThermalVisionUndeadRaces)
 	FormListCopy(none, "HnS_MagickaDetectionRaces", MagickaDetectionRaces)
-	;FormListCopy(none, "HnS_NoMagickaDetectionDwarvenRaces", NoMagickaDetectionDwarvenRaces)
+	FormListCopy(none, "HnS_NoMagickaDetectionDwarvenRaces", NoMagickaDetectionDwarvenRaces)
 	FormListCopy(none, "HnS_FoggyWeather", FoggyWeather)
 	FormListCopy(none, "HnS_SevereWeather", SevereWeather)
 	FormListCopy(none, "HnS_StandardInteriorWorldspaces", StandardInteriorWorldspaces)
@@ -186,6 +186,7 @@ function InitializeStorage()
 		CycleVariableNumber = 0
 		CycleKeyNumber +=1
 	endWhile
+	
 	Debug.Trace("Hot and Sweaty, Initialization Complete.")
 endFunction
 

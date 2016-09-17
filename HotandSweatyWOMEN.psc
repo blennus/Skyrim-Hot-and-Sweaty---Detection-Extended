@@ -33,11 +33,11 @@ function SeeWarmth()
 	float DetectionLevel = PapyrusUtil.ClampFloat(TemperatureDifference, 0.0, 4.0)
 	if DetectionLevel > 0.0
 		if WarmthSeekingActor.GetActorValue("Confidence") > 0.0
-			if WarmthSeekingActor.GetCombatState() == 0
+			if WarmthSeekingActor.GetCombatState() == 0 && WarmthSeekingActor.GetDistance(PlayerRef) < 3000.0
 				WarmthSeekingActor.CreateDetectionEvent(PlayerRef, 1)
 			endIf
 			HnS_DetectionSuccessTotalThisCycle.Mod(DetectionLevel * HnS_AlertedBonus.GetValue())
-			Debug.Trace("Players heat detected for " + DetectionLevel + " points.")
+			Debug.Trace(WarmthSeekingActor.GetName() + " of Race " + WarmthSeekingActor.GetRace().GetName() + " felt Heat for " + (DetectionLevel) + " points")
 		elseIf WarmthSeekingActor.IsHostileToActor(PlayerRef)
 			WarmthSeekingActor.StartCombat(PlayerRef)
 		endIf

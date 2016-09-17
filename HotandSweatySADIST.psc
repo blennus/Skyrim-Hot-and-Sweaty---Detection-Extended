@@ -32,6 +32,7 @@ event OnInit()
 endEvent
 
 function OnLoadInitialize()
+	Utility.WaitMenuMode(0.5)
 	SetGameSettingFloat("fSneakBaseValue", CurrentSneakBaseValue)
 endFunction
 
@@ -48,7 +49,7 @@ event OnUpdate()
 	float timeBetweenDetectionChecks = HnS_TimeBetweenDetectionChecks.GetValue()
 	float WhatTimeIsItNow = Utility.GetCurrentGameTime() * 24.0
 	float AmountofTimePassedSinceLastUpdate = WhatTimeIsItNow - TimeLastChecked
-	float DetectionSuccessTotalthisCycle = ClampFloat(Math.Sqrt(HnS_DetectionSuccessTotalThisCycle.GetValue()), 0.0, timeBetweenDetectionChecks*2.0)
+	float DetectionSuccessTotalthisCycle = ClampFloat(Math.Sqrt(HnS_DetectionSuccessTotalThisCycle.GetValue()), 0.0, timeBetweenDetectionChecks*10.0)
 	if RecentlyDetected && AmountofTimePassedSinceLastUpdate >= 1.0 && CurrentSneakBaseValue > -5.0
 		Debug.Trace("Sneak Base value reset to -5")
 		CurrentSneakBaseValue = -5.0
